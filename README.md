@@ -2,6 +2,12 @@ SAM SPA Message
 ==============================================
 SPA Message is a simple web service that sends safety plans via SMS/Email.
 
+### Sample Request
+
+`POST /send-message/`
+
+    curl -d '{"data": "<base64_data>", "number": "+1<phone_number>"}' -H 'Content-Type: application/json' https://api.mhawebsvc.org/spa/send-message
+
 What's Here
 -----------
 
