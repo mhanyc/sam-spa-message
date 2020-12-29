@@ -27,7 +27,7 @@ Resources:
   SendMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda'
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-spa-message'
       CodeUri: src/
       Handler: index.handler
       Runtime: python3.7
