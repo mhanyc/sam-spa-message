@@ -2,6 +2,14 @@ import json
 import boto3
 import base64
 import uuid
+import sentry_sdk
+from sentry_sdk import capture_exception
+from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
+
+sentry_sdk.init(
+    dsn="https://ed7b0d39a2b64968b5c6635650d71086@o301017.ingest.sentry.io/5582810",
+    integrations=[AwsLambdaIntegration()]
+)
 
 s3 = boto3.resource('s3')
 bucket_name = 'safety-plan-artifacts'
