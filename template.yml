@@ -39,14 +39,21 @@ Resources:
         PostEvent:
           Type: Api
           Properties:
+            RestApiId: !Ref SendMessageAPI
             Path: /send-message
             Method: post
+
+  SendMessageAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
       Cors:
         AllowMethods: "'POST, GET'"
         AllowHeaders: "'X-Forwarded-For'"
         AllowOrigin: "'localhost:3000'"
         MaxAge: "'600'"
         AllowCredentials: True
+
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
