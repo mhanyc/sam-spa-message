@@ -41,6 +41,12 @@ Resources:
           Properties:
             Path: /send-message
             Method: post
+      Cors:
+        AllowMethods: "'POST, GET'"
+        AllowHeaders: "'X-Forwarded-For'"
+        AllowOrigin: "'localhost:3000'"
+        MaxAge: "'600'"
+        AllowCredentials: True
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
