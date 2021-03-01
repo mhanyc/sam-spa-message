@@ -24,13 +24,61 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
+
+  SendEmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: awscodestar-${ProjectId}-lambda-spa-message
+      CodeUri: SendEmailFunction
+      Handler: index.handler
+      Runtime: python3.8
+      Events:
+        PostEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: SendEmailAPI
+            Path: /send-email
+            Method: post
+    SendEmailAPI:
+      Type: AWS::Serverless::Api
+      Properties:
+        StageName: Prod
+        Cors:
+          AllowMethods: '''POST, GET'''
+          AllowHeaders: '''X-Forwarded-For'''
+          AllowOrigin: '''localhost:3000'''
+          MaxAge: '''600'''
+          AllowCredentials: true
+    SendMessageFunction:
+      Type: AWS::Serverless::Function
+      Properties:
+        FunctionName:
+          Fn::Sub: awscodestar-${ProjectId}-lambda-spa-message
+        CodeUri: SendMessageFunction
+        Handler: index.handler
+        Runtime: python3.8
+        Role:
+          Fn::GetAtt:
+            - LambdaExecutionRole
+            - Arn
+        Events:
+          PostEvent:
+            Type: Api
+            Properties:
+              RestApiId:
+                Ref: SendMessageAPI
+              Path: /send-message
+              Method: post
+
   SendMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-spa-message'
       CodeUri: src/
       Handler: index.handler
-      Runtime: python3.7
+      Runtime: python3.8
       Role:
         Fn::GetAtt:
         - LambdaExecutionRole
