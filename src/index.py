@@ -26,12 +26,12 @@ def upload_file(data):
     return object_url
 
 
-def publish_to_phone(msg, email='noreply@vibrant.org'):
-    ses = boto3.client('ses')
+def publish_to_phone(msg, phone_number='+17544221236'):
+    sns = boto3.client('sns')
 
-    # Send an EMail to the specified email
+    # Send a SMS message to the specified phone number
     response = sns.publish(
-        SENDER=email,
+        PhoneNumber=phone_number,
         Message=msg,
         MessageAttributes={
             'AWS.SNS.SMS.SMSType': {
