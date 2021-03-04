@@ -98,9 +98,10 @@ def handler(event, context):
         }
     else:
         email_content = event['data']
+        to_email = event['to_email']
 
         object_url = upload_file(email_content)
-        send_email('atarla@vibrant.org', object_url, from_email='noreply@vibrant.org')
+        send_email(to_email, object_url, from_email='noreply@vibrant.org')
 
         return {
             "statusCode": 200,
