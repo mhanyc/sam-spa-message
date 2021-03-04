@@ -4,6 +4,7 @@ import base64
 import uuid
 import sentry_sdk
 from sentry_sdk import capture_exception
+# from botocore.exceptions import ClientError
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 sentry_sdk.init(
@@ -42,18 +43,70 @@ def publish_to_phone(msg, phone_number='+17544221236'):
     print(response)
 
 
+def send_email(to_email, msg_content, from_email='noreply@vibrant.org'):
+    client = boto3.client('ses', region_name='us-east-1')
+    object_url = upload_file(msg_content)
+
+    response = client.send_email(
+        Destination={
+            'ToAddresses': [
+                to_email,
+            ],
+        },
+        Message={
+            'Body': {
+                'Html': {
+                    'Charset': "UTF-8",
+                    'Data': object_url,
+                },
+                'Text': {
+                    'Charset': "UTF-8",
+                    'Data': "BODY_TEXT",
+                },
+            },
+            'Subject': {
+                'Charset': "UTF-8",
+                'Data': "Your Safety Plan",
+            },
+        },
+        Source=from_email,
+        # If you are not using a configuration set, comment or delete the
+        # following line
+        # ConfigurationSetName=CONFIGURATION_SET,
+    )
+    print(response)
+
+
 def handler(event, context):
 
     event = json.loads(event['body'])
-    base64_data = event['data']
-    phone_number = event['number']
+    input_type = event['type']
+    print("input_type", input_type)
 
-    object_url = upload_file(base64_data)
-    publish_to_phone(object_url, phone_number)
+    if input_type == "text":
+        base64_data = event['data']
+        phone_number = event['number']
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "url":  object_url
-        }),
-    }
+        object_url = upload_file(base64_data)
+        publish_to_phone(object_url, phone_number)
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "url": object_url
+            }),
+        }
+    else:
+        email_content = event['data']
+        to_email = event['to_email']
+
+        object_url = upload_file(email_content)
+        send_email(to_email, object_url, from_email='noreply@vibrant.org')
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "pdf": "pdf"
+            }),
+        }
+
