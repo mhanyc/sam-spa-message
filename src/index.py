@@ -4,7 +4,7 @@ import base64
 import uuid
 import sentry_sdk
 from sentry_sdk import capture_exception
-from botocore.exceptions import ClientError
+# from botocore.exceptions import ClientError
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 sentry_sdk.init(
@@ -79,9 +79,10 @@ def send_email(to_email, msg_content, from_email='noreply@vibrant.org'):
 def handler(event, context):
 
     event = json.loads(event['body'])
-    type = event['type']
+    input_type = event['type']
+    print("input_type", input_type)
 
-    if type == "text":
+    if input_type == "text":
         base64_data = event['data']
         phone_number = event['number']
 
