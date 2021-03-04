@@ -45,6 +45,7 @@ def publish_to_phone(msg, phone_number='+17544221236'):
 
 def send_email(to_email, msg_content, from_email='noreply@vibrant.org'):
     client = boto3.client('ses', region_name='us-east-1')
+    object_url = upload_file(msg_content)
 
     response = client.send_email(
         Destination={
@@ -56,7 +57,7 @@ def send_email(to_email, msg_content, from_email='noreply@vibrant.org'):
             'Body': {
                 'Html': {
                     'Charset': "UTF-8",
-                    'Data': "Here's your safety plan",
+                    'Data': object_url,
                 },
                 'Text': {
                     'Charset': "UTF-8",
@@ -98,7 +99,8 @@ def handler(event, context):
     else:
         email_content = event['data']
 
-        send_email('atarla@vibrant.org', email_content, from_email='noreply@vibrant.org')
+        object_url = upload_file(email_content)
+        send_email('atarla@vibrant.org', object_url, from_email='noreply@vibrant.org')
 
         return {
             "statusCode": 200,
