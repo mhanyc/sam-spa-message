@@ -98,7 +98,7 @@ def handler(event, context):
         }
     else:
         email_content = event['data']
-        to_email = event['to_email']
+        to_email = event['email']
 
         object_url = upload_file(email_content)
         send_email(to_email, object_url, from_email='noreply@vibrant.org')
