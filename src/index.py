@@ -81,7 +81,6 @@ def handler(event, context):
 
     event = json.loads(event['body'])
     input_type = event['type']
-    print("input_type", input_type)
 
     if input_type == "text":
         base64_data = event['data']
