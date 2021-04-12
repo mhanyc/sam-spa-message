@@ -45,7 +45,7 @@ def publish_to_phone(msg, phone_number='+17544221236'):
 
 def send_email(to_email, msg_content, from_email='noreply@vibrant.org'):
     client = boto3.client('ses', region_name='us-east-1')
-    object_url = upload_file(msg_content)
+    object_url = msg_content
 
     response = client.send_email(
         Destination={
